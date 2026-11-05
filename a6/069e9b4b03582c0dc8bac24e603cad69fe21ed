@@ -1,0 +1,30 @@
+tests/client-nav-icon.spec.ts
+  s_18c7320c36e384::t_b31e7972d3b365 174-176,178-180,185-187
+package.json
+  s_18c7320c36e384::t_f2c6346a4303f6 4
+tests/client-lifecycle.spec.ts
+  s_18c7320c36e384::t_3e01301b34fd8a 24,59,116
+  s_18c7320c36e384::t_175c2a0965c688 1-23,25-38,40-58,60-115,117-128
+  s_18c7320c36e384::t_7afe2809ceb731 39
+package-lock.json
+  s_18c7320c36e384::t_74c30efe0020ce 3,9
+client/index.cjs
+  s_18c7320c36e384::t_a371dc443172a1 1162
+  s_18c7320c36e384::t_e834bd54306365 1154-1161
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.52-trip",
+  "base_commit_sha": "a6069e9b4b03582c0dc8bac24e603cad69fe21ed",
+  "prompts": {},
+  "sessions": {
+    "s_18c7320c36e384": {
+      "agent_id": {
+        "tool": "deepseekharness",
+        "id": "session-7902988d-e918-4391-acda-e2f0efac33e2",
+        "model": "claude-deepseek-v4.1-flash[1M]"
+      },
+      "human_author": "FlyAtNight-cup <fangling930@hotmail.com>"
+    }
+  }
+}
