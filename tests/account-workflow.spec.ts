@@ -49,6 +49,7 @@ vi.mock('../src/transport.ts', () => ({
   postForm: (url: string, body: URLSearchParams) => wire.route(url, { body }),
   postJsonWithHeaders: (url: string, body: unknown, headers: Record<string, string>) => wire.route(url, { headers, body }),
   parseProxyUrl: (raw: string) => new URL(raw),
+  proxyFromEnvironment: () => undefined,
 }))
 
 const { KiroAccountStore } = await import('../src/accounts.ts')

@@ -39,6 +39,18 @@ export interface TransportRequest {
  * @throws when the value is not a URL, or names a scheme this transport cannot open.
  */
 export declare function parseProxyUrl(raw: string): URL;
+/**
+ * Resolve the proxy a process was started behind, when nothing is configured.
+ *
+ * Kiro authorizes Claude models by request egress, so a deployment whose direct
+ * egress is unauthorized must send those requests through its proxy. Node only
+ * honors these variables when `NODE_USE_ENV_PROXY=1`; the adapter's transport
+ * uses `http`/`https` directly, so it reads them here instead of silently
+ * connecting directly and letting the service answer `INVALID_MODEL`.
+ * @param environment - environment snapshot; defaults to the live process.
+ * @returns the configured proxy URL, or `undefined` for direct egress.
+ */
+export declare function proxyFromEnvironment(environment?: NodeJS.ProcessEnv): string | undefined;
 export declare function post(options: TransportRequest): Promise<TransportResponse>;
 /**
  * POST JSON and read the whole response, for the small non-streaming calls

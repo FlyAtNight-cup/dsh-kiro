@@ -148,7 +148,7 @@ llm-kiro:
 
 | 字段 | 默认值 | 含义 |
 |---|---|---|
-| `proxyUrl` | 直连 | Kiro 与 OIDC 请求使用的 HTTP/HTTPS 代理，可在 URL 中包含凭据。 |
+| `proxyUrl` | `HTTPS_PROXY` / `HTTP_PROXY` | Kiro 与 OIDC 请求使用的 HTTP/HTTPS 代理，可在 URL 中包含凭据。 |
 | `region` | 已登录 token 的 region | 选择 Kiro 端点；Amazon Q API 未覆盖的 region（token 的 SSO region 常常如此）会回退到默认的 `q.us-east-1.amazonaws.com`。 |
 | `profileArn` | 账号默认值 | 请求与模型发现使用的 CodeWhisperer profile。 |
 | `thinking` | `enabled` | `disabled` 会隐藏推理控制并停止发送原生 effort 字段。 |
@@ -280,7 +280,7 @@ Harness 在 `min(W × thresholdRatio, W − O − headroom)` 处触发压缩，�
 
 ## 为什么部分 Claude 路由需要代理
 
-Kiro 可能同时按账号权益与请求出口授权模型系列。未授权出口下，`claude-*` 可能返回 `INVALID_MODEL`，而开放权重模型仍可工作。需要时可用 `proxyUrl` 提供合适出口。代理使用 HTTP `CONNECT`，TLS 在隧道内协商，因此代理能看到目标主机名，但看不到 bearer token 或请求正文。
+Kiro 可能同时按账号权益与请求出口授权模型系列。未授权出口下，`claude-*` 可能返回 `INVALID_MODEL`（HTTP 400，"Invalid model. Please select a different model to continue."），而开放权重模型仍可工作。需要时可用 `proxyUrl` 提供合适出口；未配置时，适配器会自行读取环境变量 `HTTPS_PROXY` / `HTTP_PROXY`（大小写均可），因此不依赖 Node 的 `NODE_USE_ENV_PROXY=1` 开关，显式 `proxyUrl` 始终优先。代理使用 HTTP `CONNECT`，TLS 在隧道内协商，因此代理能看到目标主机名，但看不到 bearer token 或请求正文。
 
 ## 错误
 

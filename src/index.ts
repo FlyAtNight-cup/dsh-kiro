@@ -35,7 +35,7 @@ import { credentialDirectory } from './paths.ts'
 import { FileModelSettingsStore } from './model-settings.ts'
 import { assertKiroProfileArn } from './profile.ts'
 import { assertKiroRegion } from './region.ts'
-import { parseProxyUrl, postForm, postJson } from './transport.ts'
+import { parseProxyUrl, postForm, postJson, proxyFromEnvironment } from './transport.ts'
 import { registerWebApi } from './web.ts'
 import { KiroUsageService } from './usage.ts'
 
@@ -122,7 +122,7 @@ export type {
 export { credentialDirectory } from './paths.ts'
 export { assertKiroProfileArn, profileRegion } from './profile.ts'
 export { assertKiroRegion } from './region.ts'
-export { getJson, parseProxyUrl, postForm, postJson, postJsonWithHeaders } from './transport.ts'
+export { getJson, parseProxyUrl, postForm, postJson, postJsonWithHeaders, proxyFromEnvironment } from './transport.ts'
 export { KiroUsageService, parseKiroUsage } from './usage.ts'
 export type { KiroUsage, KiroUsageRow, KiroUsageServiceOptions } from './usage.ts'
 export { buildModelRequestFields } from './serialize.ts'
@@ -355,14 +355,38 @@ function resolveModels(models: readonly KiroCatalogModel[] | undefined): KiroCat
  * @throws when a field is present but unusable (a malformed proxy URL, a
  *   duplicate catalog id, an out-of-range timeout).
  */
-export function resolveAdapterOptions(config: Options): ResolvedKiroOptions {
+export function resolveAdapterOptions(
+  config: Options,
+  environment: NodeJS.ProcessEnv = {},
+): ResolvedKiroOptions {
   if (config.thinking === 'disabled'
     && config.reasoningEffort !== undefined
     && config.reasoningEffort !== 'off'
     && config.reasoningEffort !== 'none') {
     throw new Error('llm-kiro: only reasoningEffort "off" or "none" can be configured when thinking is disabled')
   }
-  if (config.proxyUrl !== undefined) parseProxyUrl(config.proxyUrl)
+  // Kiro authorizes Claude models by request egress. An explicit `proxyUrl` is
+  // the deployment's own fact and wins; otherwise the standard environment
+  // variables name the egress the process was started behind. Reading them here
+  // keeps the adapter from silently going direct when Node's own environment
+  // proxy support is not switched on, which the service reports as an invalid
+  // model rather than a transport failure.
+  let proxyUrl = config.proxyUrl
+  if (proxyUrl === undefined) {
+    proxyUrl = proxyFromEnvironment(environment)
+    if (proxyUrl !== undefined) {
+      try {
+        parseProxyUrl(proxyUrl)
+      } catch (error: unknown) {
+        throw new Error(
+          `llm-kiro: environment proxy "${proxyUrl}" is not a usable HTTP(S) proxy`,
+          { cause: error },
+        )
+      }
+    }
+  } else {
+    parseProxyUrl(proxyUrl)
+  }
   const region = config.region === undefined ? undefined : assertKiroRegion(config.region)
   const profileArn = config.profileArn === undefined ? undefined : assertKiroProfileArn(config.profileArn)
   if (config.defaultContextWindow !== undefined
@@ -390,7 +414,7 @@ export function resolveAdapterOptions(config: Options): ResolvedKiroOptions {
     )
   }
   return {
-    ...config.proxyUrl === undefined ? {} : { proxyUrl: config.proxyUrl },
+    ...proxyUrl === undefined ? {} : { proxyUrl },
     ...region === undefined ? {} : { region },
     ...profileArn === undefined ? {} : { profileArn },
     defaults: {
@@ -416,7 +440,7 @@ export function apply(ctx: Context, config: Config): void {
     const raw = plainOptions(config)
     if (raw === lastRaw && lastGood !== undefined) return lastGood
     try {
-      const next = resolveAdapterOptions(raw)
+      const next = resolveAdapterOptions(raw, process.env)
       lastRaw = raw
       lastGood = next
       return next

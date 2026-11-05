@@ -79,6 +79,34 @@ export function parseProxyUrl(raw: string): URL {
 }
 
 /**
+ * Standard environment variables naming an HTTP(S) proxy, in precedence order.
+ * An HTTPS request reaches the same proxy through either spelling.
+ */
+const PROXY_ENVIRONMENT = ['HTTPS_PROXY', 'https_proxy', 'HTTP_PROXY', 'http_proxy'] as const
+
+/**
+ * Resolve the proxy a process was started behind, when nothing is configured.
+ *
+ * Kiro authorizes Claude models by request egress, so a deployment whose direct
+ * egress is unauthorized must send those requests through its proxy. Node only
+ * honors these variables when `NODE_USE_ENV_PROXY=1`; the adapter's transport
+ * uses `http`/`https` directly, so it reads them here instead of silently
+ * connecting directly and letting the service answer `INVALID_MODEL`.
+ * @param environment - environment snapshot; defaults to the live process.
+ * @returns the configured proxy URL, or `undefined` for direct egress.
+ */
+export function proxyFromEnvironment(environment: NodeJS.ProcessEnv = process.env): string | undefined {
+  for (const name of PROXY_ENVIRONMENT) {
+    const value = environment[name]?.trim()
+    if (value === undefined || value.length === 0) continue
+    // Environment proxies commonly omit the scheme (`host:port`); HTTP is the
+    // conventional default, and an explicit scheme is preserved verbatim.
+    return /^[a-z][a-z0-9+.-]*:\/\//iu.test(value) ? value : `http://${value}`
+  }
+  return undefined
+}
+
+/**
  * Open a `CONNECT` tunnel to `host:port` through an HTTP proxy.
  * @param proxy - the validated proxy URL.
  * @param host - target hostname.

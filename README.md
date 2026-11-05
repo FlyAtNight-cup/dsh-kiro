@@ -155,7 +155,7 @@ Every field is optional:
 
 | Field | Default | Meaning |
 |---|---|---|
-| `proxyUrl` | direct | HTTP/HTTPS proxy for Kiro and OIDC requests; credentials in the URL are supported. |
+| `proxyUrl` | `HTTPS_PROXY` / `HTTP_PROXY` | HTTP/HTTPS proxy for Kiro and OIDC requests; credentials in the URL are supported. |
 | `region` | signed-in token region | Selects the Kiro endpoint; regions the Amazon Q API does not serve (the token's SSO region often is one) fall back to the default `q.us-east-1.amazonaws.com`. |
 | `profileArn` | account default | CodeWhisperer profile used for requests and model discovery. |
 | `thinking` | `enabled` | `disabled` suppresses reasoning controls and native effort fields. |
@@ -306,7 +306,7 @@ so a Kiro-scoped policy has to name every model:
 
 ## Why some Claude routes need a proxy
 
-Kiro can authorize model families by request egress as well as account entitlement. From an unauthorized egress a `claude-*` model may fail with `INVALID_MODEL` while open-weight routes work. `proxyUrl` provides the required egress when applicable. The adapter uses an HTTP `CONNECT` tunnel with TLS negotiated inside it, so the proxy sees the target hostname but not the bearer token or request body.
+Kiro can authorize model families by request egress as well as account entitlement. From an unauthorized egress a `claude-*` model may fail with `INVALID_MODEL` (HTTP 400, "Invalid model. Please select a different model to continue.") while open-weight routes keep working. `proxyUrl` provides the required egress when applicable. When it is unset, the adapter reads `HTTPS_PROXY` / `HTTP_PROXY` (either case) from the environment itself, so it does not depend on Node's `NODE_USE_ENV_PROXY=1` flag; an explicit `proxyUrl` always wins. The adapter uses an HTTP `CONNECT` tunnel with TLS negotiated inside it, so the proxy sees the target hostname but not the bearer token or request body.
 
 ## Errors
 

@@ -19,6 +19,7 @@ vi.mock('../src/transport.ts', () => ({
     posted.push(options)
     return Promise.resolve(respond())
   },
+  proxyFromEnvironment: () => undefined,
 }))
 
 const { conversationIdFor, KiroAdapter } = await import('../src/adapter.ts')

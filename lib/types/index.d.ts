@@ -36,7 +36,7 @@ export type { DeviceCredentials, DeviceLoginOptions, SaveManagedCredentialOption
 export { credentialDirectory } from './paths.ts';
 export { assertKiroProfileArn, profileRegion } from './profile.ts';
 export { assertKiroRegion } from './region.ts';
-export { getJson, parseProxyUrl, postForm, postJson, postJsonWithHeaders } from './transport.ts';
+export { getJson, parseProxyUrl, postForm, postJson, postJsonWithHeaders, proxyFromEnvironment } from './transport.ts';
 export { KiroUsageService, parseKiroUsage } from './usage.ts';
 export type { KiroUsage, KiroUsageRow, KiroUsageServiceOptions } from './usage.ts';
 export { buildModelRequestFields } from './serialize.ts';
@@ -133,5 +133,5 @@ export type ResolvedKiroOptions = KiroConnectionOptions;
  * @throws when a field is present but unusable (a malformed proxy URL, a
  *   duplicate catalog id, an out-of-range timeout).
  */
-export declare function resolveAdapterOptions(config: Options): ResolvedKiroOptions;
+export declare function resolveAdapterOptions(config: Options, environment?: NodeJS.ProcessEnv): ResolvedKiroOptions;
 export declare function apply(ctx: Context, config: Config): void;
