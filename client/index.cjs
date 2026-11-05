@@ -1165,6 +1165,13 @@ textarea.dshk-input{min-height:78px;resize:vertical;font-family:ui-monospace,SFM
         // A host without that service (or without `inject` at all) registers the
         // seat without a directory, and the chip then stays invisible rather
         // than guessing which route the session is on.
+        //
+        // DSH 0.2's `directoryFor` reads the host's `remote.session` and
+        // `sessions` services *through the calling context*, so those must be
+        // injected here too: tracing the call to a scope that lacks them throws
+        // `cannot get property "remote.session" without inject` on first render.
+        // `remote.session` is its own nested service name, not a member of
+        // `remote`, so declaring only `remote` does not satisfy the trace.
         const registerQuota = (host) => {
           const directoryFor = host.modelDirectories?.directoryFor
           host.slots.inject('conversation.input.right', () => host.slots.register({
@@ -1177,8 +1184,11 @@ textarea.dshk-input{min-height:78px;resize:vertical;font-family:ui-monospace,SFM
             },
           }, (props) => React.createElement(KiroQuota, { ...props, ctx })))
         }
-        if (typeof ctx.inject === 'function') ctx.inject(['slots', 'modelDirectories'], registerQuota)
-        else registerQuota(ctx)
+        if (typeof ctx.inject === 'function') {
+          ctx.inject(['slots', 'modelDirectories', 'remote.session', 'sessions'], registerQuota)
+        } else {
+          registerQuota(ctx)
+        }
       },
     }
   },

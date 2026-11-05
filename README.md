@@ -14,8 +14,10 @@ This is an independent integration and is not affiliated with or endorsed by AWS
 
 ## Install
 
+Requires DeepSeek Harness **0.2.1 or newer** (verified against `0.2.1-rc.5`). This fork tracks the 0.2 plugin API; the original fork target, DSH 0.1.x, is no longer supported.
+
 ```sh
-dsh plugin --profile web add github:dat-lequoc/dsh-kiro
+dsh plugin --profile web add github:FlyAtNight-cup/dsh-kiro
 dsh --profile web
 ```
 
@@ -23,7 +25,7 @@ From a DeepSeek Harness source checkout, use its launcher:
 
 ```sh
 cd ~/deepseek-harness
-pnpm dsh plugin --profile web add github:dat-lequoc/dsh-kiro
+pnpm dsh plugin --profile web add github:FlyAtNight-cup/dsh-kiro
 pnpm dsh --profile web
 ```
 

@@ -20,6 +20,8 @@ import type { RetryPolicyConfig } from '@deepseek-ai/dsh-llm';
 import type { KiroCatalogModel, KiroConnectionOptions } from './adapter.ts';
 export { contextCapacity, DEFAULT_CONTEXT_WINDOW, DEFAULT_STREAM_IDLE_TIMEOUT_MS, KiroAdapter, httpErrorCode, } from './adapter.ts';
 export type { KiroAdapterOptions, KiroCatalogModel, KiroConnectionOptions } from './adapter.ts';
+export { kiroApiEndpoint } from './endpoint.ts';
+export type { KiroApiEndpoint } from './endpoint.ts';
 export { clearTokenCache, DEFAULT_REGION, kiroAuthMethod, kiroCredentialDirectory, resolveToken, resolveTokenFromDirectories, resolveTokenFromStore, } from './auth.ts';
 export { defaultAccountLabel, KIRO_ACCOUNTS_FILE, KIRO_LEGACY_TOKEN_FILE, KiroAccountStore, MAX_KIRO_ACCOUNTS, } from './accounts.ts';
 export type { CapturedKiroAccount, KiroAccountSummary, KiroAccountsDocument, KiroAccountsSnapshot, KiroAccountUpsert, KiroStoredAccount, } from './accounts.ts';
@@ -94,7 +96,7 @@ export declare const Config: z<Schemastery.ObjectS<NoInfer<{
     region: z<string, string, "volatile">;
     profileArn: z<string, string, "volatile">;
     thinking: z<"enabled" | "disabled", "enabled" | "disabled", "volatile">;
-    reasoningEffort: z<"none" | "off" | "low" | "medium" | "high" | "xhigh" | "max", "none" | "off" | "low" | "medium" | "high" | "xhigh" | "max", "volatile">;
+    reasoningEffort: z<"off" | "low" | "medium" | "high" | "none" | "xhigh" | "max", "off" | "low" | "medium" | "high" | "none" | "xhigh" | "max", "volatile">;
     defaultContextWindow: z<number, number, "volatile-defined">;
     maxContextWindow: z<number, number, "volatile">;
     models: z<NoInfer<KiroCatalogModel[]>, NoInfer<KiroCatalogModel[]>, "volatile-defined">;
@@ -106,7 +108,7 @@ export declare const Config: z<Schemastery.ObjectS<NoInfer<{
     region: z<string, string, "volatile">;
     profileArn: z<string, string, "volatile">;
     thinking: z<"enabled" | "disabled", "enabled" | "disabled", "volatile">;
-    reasoningEffort: z<"none" | "off" | "low" | "medium" | "high" | "xhigh" | "max", "none" | "off" | "low" | "medium" | "high" | "xhigh" | "max", "volatile">;
+    reasoningEffort: z<"off" | "low" | "medium" | "high" | "none" | "xhigh" | "max", "off" | "low" | "medium" | "high" | "none" | "xhigh" | "max", "volatile">;
     defaultContextWindow: z<number, number, "volatile-defined">;
     maxContextWindow: z<number, number, "volatile">;
     models: z<NoInfer<KiroCatalogModel[]>, NoInfer<KiroCatalogModel[]>, "volatile-defined">;

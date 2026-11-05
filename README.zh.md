@@ -14,8 +14,10 @@
 
 ## 安装
 
+需要 DeepSeek Harness **0.2.1 或更新版本**（已在 `0.2.1-rc.5` 上验证）。本 fork 已跟进 0.2 插件 API；原 fork 面向的 DSH 0.1.x 不再支持。
+
 ```sh
-dsh plugin --profile web add github:dat-lequoc/dsh-kiro
+dsh plugin --profile web add github:FlyAtNight-cup/dsh-kiro
 dsh --profile web
 ```
 
@@ -23,7 +25,7 @@ dsh --profile web
 
 ```sh
 cd ~/deepseek-harness
-pnpm dsh plugin --profile web add github:dat-lequoc/dsh-kiro
+pnpm dsh plugin --profile web add github:FlyAtNight-cup/dsh-kiro
 pnpm dsh --profile web
 ```
 

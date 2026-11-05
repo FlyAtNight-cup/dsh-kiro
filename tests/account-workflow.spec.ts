@@ -60,6 +60,8 @@ type WebDependencies = import('../src/web.ts').WebDependencies
 
 let home: string
 let directory: string
+/** The external Kiro CLI fallback reads `os.homedir()`, so isolate it too. */
+const originalHome = process.env.HOME
 let handler: (request: IncomingMessage, response: ServerResponse) => Promise<void>
 
 /** Drive one request through the registered Kiro API handler. */
@@ -109,6 +111,7 @@ async function importKey(key: string, label: string): Promise<string> {
 beforeEach(async () => {
   home = await mkdtemp(join(tmpdir(), 'dsh-kiro-workflow-'))
   process.env.DSH_HOME = home
+  process.env.HOME = home
   directory = join(home, 'storages', 'kiro-auth')
   wire.state.keys.clear()
   wire.state.refreshes.length = 0
@@ -142,6 +145,8 @@ beforeEach(async () => {
 afterEach(async () => {
   clearTokenCache()
   delete process.env.DSH_HOME
+  if (originalHome === undefined) delete process.env.HOME
+  else process.env.HOME = originalHome
   await rm(home, { recursive: true, force: true })
 })
 

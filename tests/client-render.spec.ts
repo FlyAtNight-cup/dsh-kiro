@@ -144,8 +144,10 @@ describe('the shipped settings page and composer chip', () => {
     tree: Element | null
     rerender: () => Element | null
     calls: { path: string; method: string | undefined; body: unknown }[]
+    injected: string[][]
   }> {
     const calls: { path: string; method: string | undefined; body: unknown }[] = []
+    const injected: string[][] = []
     const source = readFileSync(new URL('../client/index.cjs', import.meta.url), 'utf8')
 
     const original = {
@@ -226,7 +228,10 @@ describe('the shipped settings page and composer chip', () => {
     }
     module.apply({
       ...scope,
-      inject: (_names: string[], use: (injected: unknown) => void) => use(scope),
+      inject: (names: string[], use: (injected: unknown) => void) => {
+        injected.push([...names])
+        use(scope)
+      },
       locale: {
         register: () => undefined,
         bind: () => (key: string) => key,
@@ -248,7 +253,7 @@ describe('the shipped settings page and composer chip', () => {
     tree = rerender()
     await new Promise(resolve => setTimeout(resolve, 0))
     tree = rerender()
-    return { tree, rerender, calls }
+    return { tree, rerender, calls, injected }
   }
 
   it('lists every account, marks the active one, and offers the others', async () => {
@@ -347,6 +352,17 @@ describe('the shipped settings page and composer chip', () => {
       }],
     }
   }
+
+  it('injects the services the 0.2 directory lookup traces through', async () => {
+    // `directoryFor` reads `sessions` and the nested `remote.session` service
+    // through the calling scope. Declaring only `modelDirectories` makes the
+    // first render throw `cannot get property "remote.session" without inject`,
+    // so the composer chip never appears.
+    const { injected } = await renderPage(statusPayload([], null), usagePayload(3.1), 'quota')
+    expect(injected.some(names => names.includes('modelDirectories')
+      && names.includes('sessions')
+      && names.includes('remote.session'))).toBe(true)
+  })
 
   it('shows the tightest quota beside the composer', async () => {
     const { tree, calls } = await renderPage(statusPayload([], null), usagePayload(3.1), 'quota')

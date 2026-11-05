@@ -10,6 +10,8 @@ import { registerWebApi } from '../src/web.ts'
 import type { WebDependencies } from '../src/web.ts'
 
 const temporaryDirectories: string[] = []
+/** The external Kiro CLI fallback reads `os.homedir()`, so isolate it too. */
+const originalHome = process.env.HOME
 const originalUmask = process.umask()
 
 afterEach(async () => {
@@ -110,6 +112,7 @@ describe('removing a credential from a group-writable directory', () => {
     home = await mkdtemp(join(tmpdir(), 'dsh-kiro-mode-api-'))
     temporaryDirectories.push(home)
     process.env.DSH_HOME = home
+    process.env.HOME = home
     folder = join(home, 'storages', 'kiro-auth')
     // An installation whose directory the filesystem made group-writable, which
     // is what a `umask 002` host produced before the settings writer set a mode.
@@ -143,6 +146,8 @@ describe('removing a credential from a group-writable directory', () => {
 
   afterEach(() => {
     delete process.env.DSH_HOME
+    if (originalHome === undefined) delete process.env.HOME
+    else process.env.HOME = originalHome
   })
 
   it('removes the credential the page lists, the way the reported failure tried to', async () => {
