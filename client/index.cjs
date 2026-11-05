@@ -1151,7 +1151,15 @@ textarea.dshk-input{min-height:78px;resize:vertical;font-family:ui-monospace,SFM
           if (window.__kiroNavIconDispose) window.__kiroNavIconDispose()
           window.__kiroNavIconDispose = installNavIcon()
         }
-        if (ctx.locale && typeof ctx.locale.register === 'function') ctx.locale.register(NS, { en, zh })
+        // The dictionaries belong to this plugin's fiber. DSH 0.2's client
+        // module system tears an entry down and re-applies it after a plugin
+        // update; a registration that outlives its fiber makes that second
+        // apply throw `locale namespace "dsh-kiro" already has locale "en"`.
+        if (ctx.locale && typeof ctx.locale.register === 'function') {
+          const dictionaries = { en, zh }
+          if (typeof ctx.effect === 'function') ctx.effect(() => ctx.locale.register(NS, dictionaries))
+          else ctx.locale.register(NS, dictionaries)
+        }
         ctx.slots.inject('settings.section', () => ctx.slots.register({
           name: 'settings.section',
           id: 'kiro',

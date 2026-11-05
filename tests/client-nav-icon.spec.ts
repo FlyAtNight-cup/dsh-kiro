@@ -171,15 +171,20 @@ beforeEach(async () => {
 
 /** Register the plugin against a context that captures its disposer. */
 function start(): () => void {
-  let dispose = (): void => undefined
+  // A fiber owns every effect it installs: the nav icon and the locale
+  // dictionaries each return their own disposer, and teardown runs them all.
+  const disposers: (() => void)[] = []
   apply({
-    effect: (body: () => () => void) => {
-      dispose = body()
+    effect: (body: () => (() => void) | undefined) => {
+      const dispose = body()
+      if (typeof dispose === 'function') disposers.push(dispose)
     },
     locale: { register: () => undefined },
     slots: { inject: () => undefined, register: () => undefined },
   })
-  return dispose
+  return () => {
+    for (const dispose of disposers.splice(0).reverse()) dispose()
+  }
 }
 
 describe('settings nav icon lifecycle', () => {
