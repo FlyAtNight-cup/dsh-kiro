@@ -1,0 +1,21 @@
+lib/types/index.d.ts
+  s_18c7320c36e384::t_93bd8d4a6e315f 23-24,99,111
+package.json
+  s_18c7320c36e384::t_d50bbd3f8de365 84-90,117-122,127
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.52-trip",
+  "base_commit_sha": "bd09780f58091173da4413cd18553b35267c287c",
+  "prompts": {},
+  "sessions": {
+    "s_18c7320c36e384": {
+      "agent_id": {
+        "tool": "deepseekharness",
+        "id": "session-7902988d-e918-4391-acda-e2f0efac33e2",
+        "model": "claude-deepseek-v4.1-flash[1M]"
+      },
+      "human_author": "FlyAtNight-cup <fangling930@hotmail.com>"
+    }
+  }
+}
