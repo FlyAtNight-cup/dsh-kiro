@@ -1,0 +1,41 @@
+package.json
+  s_18c7320c36e384::t_9c63bd8f10b155 4
+README.md
+  s_18c7320c36e384::t_8139de584142eb 311-314
+lib/index.js
+  s_18c7320c36e384::t_e2388b171add9e 242-262,1874-1875,3037-3038,3707-3708
+  s_18c7320c36e384::t_3d94c47d2714a5 1529
+src/discovery.ts
+  s_18c7320c36e384::t_3351fb114033fe 8
+src/usage.ts
+  s_18c7320c36e384::t_194e2719d7b480 6
+README.zh.md
+  s_18c7320c36e384::t_8139de584142eb 285-288
+tests/client-identity.spec.ts
+  s_18c7320c36e384::t_242136f5e40d0f 1-35
+src/adapter.ts
+  s_18c7320c36e384::t_3d94c47d2714a5 54
+  s_18c7320c36e384::t_3351fb114033fe 38
+src/login.ts
+  s_18c7320c36e384::t_3351fb114033fe 7,495-496
+lib/types/client-identity.d.ts
+  s_18c7320c36e384::t_194e2719d7b480 1-19
+src/client-identity.ts
+  s_18c7320c36e384::t_3351fb114033fe 1-21
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.52-trip",
+  "base_commit_sha": "ddccecc04f9cff7050e64fbd147e2c0b5cfb3ac0",
+  "prompts": {},
+  "sessions": {
+    "s_18c7320c36e384": {
+      "agent_id": {
+        "tool": "deepseekharness",
+        "id": "session-7902988d-e918-4391-acda-e2f0efac33e2",
+        "model": "gpt-6.1-sol"
+      },
+      "human_author": "FlyAtNight-cup <fangling930@hotmail.com>"
+    }
+  }
+}
