@@ -282,6 +282,10 @@ Harness 在 `min(W × thresholdRatio, W − O − headroom)` 处触发压缩，�
 
 Kiro 可能同时按账号权益与请求出口授权模型系列。未授权出口下，`claude-*` 可能返回 `INVALID_MODEL`（HTTP 400，"Invalid model. Please select a different model to continue."），而开放权重模型仍可工作。需要时可用 `proxyUrl` 提供合适出口；未配置时，适配器会自行读取环境变量 `HTTPS_PROXY` / `HTTP_PROXY`（大小写均可），因此不依赖 Node 的 `NODE_USE_ENV_PROXY=1` 开关，显式 `proxyUrl` 始终优先。代理使用 HTTP `CONNECT`，TLS 在隧道内协商，因此代理能看到目标主机名，但看不到 bearer token 或请求正文。
 
+## Kiro 客户端版本
+
+Kiro 自 2026-11-09 起不再接受旧客户端：IDE 低于 `0.11.133`、CLI 低于 `1.28.2` 的请求会返回 `This version of Kiro is no longer supported. Please update to the latest version of Kiro to continue.`。插件在 [`src/client-identity.ts`](src/client-identity.ts) 中统一声明当前 Kiro IDE 身份；Kiro 提高门槛时修改 `KIRO_IDE_VERSION` 并发布新版本即可。流式请求、模型发现、用量查询和 API key 导入共用这一个常量，并有测试保证它不低于已公布的门槛。
+
 ## 错误
 
 适配器会把上游失败映射为稳定的 DSH 错误码：`AUTH`、`FORBIDDEN`、`RATE_LIMIT`、`INVALID_MODEL`、`INVALID_REQUEST`、`SERVER`、`TRANSPORT`、`ABORTED`、`TIMEOUT`、`STREAM_CLOSED`、`MALFORMED_RESPONSE`、`EMPTY_RESPONSE`。

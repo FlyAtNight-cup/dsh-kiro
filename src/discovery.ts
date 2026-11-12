@@ -5,11 +5,11 @@ import type { ModelModality } from '@deepseek-ai/dsh-llm'
 import type { KiroCatalogModel, KiroConnectionOptions } from './adapter.ts'
 import type { KiroAuthMethod, KiroToken } from './auth.ts'
 import { kiroApiEndpoint } from './endpoint.ts'
+import { KIRO_USER_AGENT } from './client-identity.ts'
 import { assertKiroProfileArn } from './profile.ts'
 import { getJson, postJsonWithHeaders } from './transport.ts'
 
 const DEFAULT_CACHE_TTL_MS = 5 * 60 * 1000
-const KIRO_USER_AGENT = 'aws-sdk-js/3.738.0 KiroIDE'
 /** Models requested per page; the service caps a page at its own maximum. */
 const PAGE_SIZE = 50
 /**

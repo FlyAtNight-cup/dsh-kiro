@@ -308,6 +308,10 @@ so a Kiro-scoped policy has to name every model:
 
 Kiro can authorize model families by request egress as well as account entitlement. From an unauthorized egress a `claude-*` model may fail with `INVALID_MODEL` (HTTP 400, "Invalid model. Please select a different model to continue.") while open-weight routes keep working. `proxyUrl` provides the required egress when applicable. When it is unset, the adapter reads `HTTPS_PROXY` / `HTTP_PROXY` (either case) from the environment itself, so it does not depend on Node's `NODE_USE_ENV_PROXY=1` flag; an explicit `proxyUrl` always wins. The adapter uses an HTTP `CONNECT` tunnel with TLS negotiated inside it, so the proxy sees the target hostname but not the bearer token or request body.
 
+## Kiro client version
+
+Kiro stopped accepting older clients on 2026-11-09: IDE builds before `0.11.133` and CLI builds before `1.28.2` are answered with `This version of Kiro is no longer supported. Please update to the latest version of Kiro to continue.` The plugin presents a current Kiro IDE identity from [`src/client-identity.ts`](src/client-identity.ts); when Kiro raises the floor, bump `KIRO_IDE_VERSION` there and publish a release. Every request path (streaming, discovery, usage, API-key import) shares that one constant, and a test keeps it above the announced floor.
+
 ## Errors
 
 The adapter maps provider failures to stable DSH codes: `AUTH`, `FORBIDDEN`, `RATE_LIMIT`, `INVALID_MODEL`, `INVALID_REQUEST`, `SERVER`, `TRANSPORT`, `ABORTED`, `TIMEOUT`, `STREAM_CLOSED`, `MALFORMED_RESPONSE`, and `EMPTY_RESPONSE`.

@@ -4,6 +4,7 @@ import { createHash, randomBytes } from 'node:crypto'
 import { mkdir, readFile, rename, unlink, writeFile } from 'node:fs/promises'
 import { join } from 'node:path'
 import { clearTokenCache, kiroAuthMethod } from './auth.ts'
+import { KIRO_USER_AGENT } from './client-identity.ts'
 import { KiroAccountStore } from './accounts.ts'
 import type { KiroAuthMethod } from './auth.ts'
 import { kiroApiEndpoint } from './endpoint.ts'
@@ -491,8 +492,8 @@ export async function importApiKey(
   const response = await requestGet(url.toString(), {
     authorization: `Bearer ${accessToken}`,
     TokenType: 'API_KEY',
-    'user-agent': 'aws-sdk-js/3.738.0 KiroIDE',
-    'x-amz-user-agent': 'aws-sdk-js/3.738.0 KiroIDE',
+    'user-agent': KIRO_USER_AGENT,
+    'x-amz-user-agent': KIRO_USER_AGENT,
   }, signal)
   const models = record(response.body)?.models
   if (response.status !== 200 || !Array.isArray(models) || models.length === 0) {

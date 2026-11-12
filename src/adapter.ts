@@ -35,6 +35,7 @@ import { requestImageDimensions } from '@deepseek-ai/dsh-attachment'
 import type { AttachmentId, ImageAttachmentRef, ImageMediaType, ImageRequestTarget } from '@deepseek-ai/dsh-attachment'
 import { idleWatchdog, timeoutOf } from '@deepseek-ai/dsh-timeout'
 import { decodeFrames } from './eventstream.ts'
+import { KIRO_USER_AGENT } from './client-identity.ts'
 import { serializeRequest } from './serialize.ts'
 import type { WireImageBlock } from './types.ts'
 import type { RequestDefaults } from './serialize.ts'
@@ -50,8 +51,7 @@ export const DEFAULT_STREAM_IDLE_TIMEOUT_MS = 300_000
 export const DEFAULT_CONTEXT_WINDOW = 200_000
 /** Timeout code distinguishing watchdog expiry from caller cancellation. */
 const STREAM_IDLE_TIMEOUT_CODE = 'LLM_STREAM_IDLE_TIMEOUT'
-/** User agent Kiro's own IDE sends; the service gates model access on it. */
-const KIRO_USER_AGENT = 'aws-sdk-js/3.738.0 KiroIDE'
+/** Operation the EventStream response belongs to. */
 const CODEWHISPERER_TARGET = 'AmazonCodeWhispererStreamingService.GenerateAssistantResponse'
 
 const OFF = ReasoningEffortId('off')
